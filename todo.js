@@ -1,0 +1,70 @@
+const redux = require("redux");
+
+//Actions
+
+const ADD_TODO = "Add TODO";
+
+const TOGGLE_TODO = "Toggle TODO";
+
+//Actions creators
+
+const addToDo = (text) =>({text, type:ADD_TODO})
+const toggleToDo = (index)=>({index, type:TOGGLE_TODO})
+
+
+//Initial State
+
+const initialValue = {
+    todos:[]
+}
+
+
+//Reducer functions 
+// must return updated state.
+
+function todoReducer(state = initialValue, action) {
+    switch(action.type) {
+        case ADD_TODO:
+            return {
+                ...state,
+                todos: [
+                    ...state.todos,
+                    {
+                        text: action.text,
+                        completed: false
+                    }
+                ]
+            };
+        case TOGGLE_TODO:
+            return {
+                ...state,
+                todos: state.todos.map((todo, i) => {
+                    if (i === action.index) {
+                        return {
+                            ...todo,
+                            completed: !todo.completed
+                        };
+                    }
+                    return todo;
+                })
+            };
+        default: 
+            return state;
+    }
+}
+
+
+//Create store.
+
+const store = redux.createStore(todoReducer);
+
+//Dispatch the actions.
+
+store.dispatch(addToDo("Study at 8"));
+store.dispatch(addToDo("Office at 9"));
+store.dispatch(toggleToDo(0));
+
+//read data from store.
+
+console.log(store.getState());
+
